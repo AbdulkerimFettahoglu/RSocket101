@@ -18,7 +18,7 @@ public class RSocketController {
      * @return Message
      */
     @MessageMapping("request-response")
-    Message requestResponse(final Message request) {
+    Message requestResponse(Message request) {
         log.info("Received request-response request: {}", request);
         // create a single Message and return it
         return new Message(request.getReflector() + " reflected.");
