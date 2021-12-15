@@ -11,7 +11,7 @@ public class RSocketController {
 	
 	/**
 	 * To send a example message via RSocket CLI use following command:
-	 * java -jar rsc.jar --debug --fnf --data "{\"reflector\":\"kerim\"}" --route fire-and-forget tcp://localhost:7000
+	 * java -jar rsc.jar --debug --fnf --data "{\"reflector\":\"value\"}" --route fire-and-forget tcp://localhost:7000
 	 * To download rsc.jar: https://github.com/making/rsc/releases
 	 * 
      * @param request
