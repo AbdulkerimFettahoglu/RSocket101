@@ -27,10 +27,11 @@ public class RSocketController {
      * @return Message
      */
     @MessageMapping("channel")
-    Flux<Message> channel(final Flux<Duration> settings) {
+    Flux<Message> channel(final Flux<Integer> settings) {
         return settings
-                    .doOnNext(setting -> log.info("\nFrequency setting is {} second(s).\n", setting.getSeconds()))
-                    .switchMap(setting -> Flux.interval(setting)
+                    .doOnNext(setting -> log.info("\nFrequency setting is {} second(s).\n", setting))
+                    .doOnCancel(() -> log.warn("client canceled the chanel"))
+                    .switchMap(setting -> Flux.interval(Duration.ofSeconds(setting))
                                                    .map(index -> new Message(index.toString())))
                                                    .log();
     }
