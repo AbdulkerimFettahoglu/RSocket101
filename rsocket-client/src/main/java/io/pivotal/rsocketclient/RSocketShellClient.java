@@ -32,4 +32,14 @@ public class RSocketShellClient {
                 .block();
         log.info("\nResponse was: {}", message);
     }
+    
+    @ShellMethod("Send one request. No response will be returned.")
+    public void fireAndForget() throws InterruptedException {
+            log.info("\nFire-And-Forget. Sending one request. Expect no response (check server console log)...");
+            this.rsocketRequester
+                    .route("fire-and-forget")
+                    .data(new Message("message from eclipse client (fnf)"))
+                    .send()
+                    .block();
+    }
 }

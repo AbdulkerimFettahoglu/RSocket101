@@ -23,5 +23,18 @@ public class RSocketController {
         // create a single Message and return it
         return new Message(request.getReflector() + " reflected.");
     }
+    
+	/**
+	 * To send a example message via RSocket CLI use following command:
+	 * java -jar rsc.jar --debug --fnf --data "{\"reflector\":\"value\"}" --route fire-and-forget tcp://localhost:7000
+	 * To download rsc.jar: https://github.com/making/rsc/releases
+	 * 
+     * @param request
+     * @return Message
+     */
+    @MessageMapping("fire-and-forget")
+    void fireAndForget(Message request) {
+        log.info("Received fire-and-forget request: {}", request);
+    }
 
 }
