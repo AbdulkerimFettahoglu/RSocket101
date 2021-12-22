@@ -32,17 +32,26 @@ public class RSocketShellClient {
 	
     @ShellMethod("Stream some settings to the server. Stream of responses will be printed.")
 	public void channel() {
-		Mono<Duration> setting1 = Mono.just(Duration.ofSeconds(1));
-		Mono<Duration> setting2 = Mono.just(Duration.ofSeconds(3)).delayElement(Duration.ofSeconds(5));
-		Mono<Duration> setting3 = Mono.just(Duration.ofSeconds(5)).delayElement(Duration.ofSeconds(15));
+		Mono<Integer> setting1 = Mono.just(1);
+		Mono<Integer> setting2 = Mono.just(3).delayElement(Duration.ofSeconds(5));
+		Mono<Integer> setting3 = Mono.just(5).delayElement(Duration.ofSeconds(15));
 
-		Flux<Duration> settings = Flux.concat(setting1, setting2, setting3)
-				.doOnNext(d -> log.info("\nSending setting for {}-second interval.\n", d.getSeconds()));
+		Flux<Integer> settings = Flux.concat(setting1, setting2, setting3)
+				.doOnNext(d -> log.info("\nSending setting for {}-second interval.\n", Duration.ofSeconds(d)));
 		
 		disposable = this.rsocketRequester
                 .route("channel")
                 .data(settings)
                 .retrieveFlux(Message.class)
-                .subscribe(message -> log.info("Received: {} \n(Type 's' to stop.)", message));
+                .subscribe(message -> log.info("Received: {} (Type 's' to stop.)", message));
+	}
+    
+	@ShellMethod("Stops Streams or Channels.")
+	public void s() {
+		if (disposable != null ) {
+			log.info("Stopping the current stream.");
+			disposable.dispose();
+			log.info("Stream stopped.");
+		}
 	}
 }
