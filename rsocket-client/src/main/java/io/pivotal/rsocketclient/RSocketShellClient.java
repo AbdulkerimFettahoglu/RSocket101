@@ -4,6 +4,10 @@ package io.pivotal.rsocketclient;
 import io.pivotal.rsocketclient.data.Message;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.Disposable;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import java.time.Duration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.rsocket.RSocketRequester;
@@ -56,6 +60,22 @@ public class RSocketShellClient {
                 .retrieveFlux(Message.class)
                 .subscribe(er -> log.info("Response received: {}", er));
     }
+    
+    @ShellMethod("Stream some settings to the server. Stream of responses will be printed.")
+	public void channel() {
+		Mono<Integer> setting1 = Mono.just(1);
+		Mono<Integer> setting2 = Mono.just(3).delayElement(Duration.ofSeconds(5));
+		Mono<Integer> setting3 = Mono.just(5).delayElement(Duration.ofSeconds(15));
+
+		Flux<Integer> settings = Flux.concat(setting1, setting2, setting3)
+				.doOnNext(d -> log.info("\nSending setting for {}-second interval.\n", Duration.ofSeconds(d)));
+		
+		disposable = this.rsocketRequester
+                .route("channel")
+                .data(settings)
+                .retrieveFlux(Message.class)
+                .subscribe(message -> log.info("Received: {} (Type 's' to stop.)", message));
+	}
     
     @ShellMethod("Stop streaming messages from the server.")
     public void s(){

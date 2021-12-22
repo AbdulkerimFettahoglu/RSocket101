@@ -57,4 +57,22 @@ public class RSocketController {
                 .map(index -> new Message(index.toString()))
                 .log();
     }
+    
+	/**
+	 * To send a example message via RSocket CLI use following command:
+	 * java -jar rsc.jar --debug --channel --data - --route channel tcp://localhost:7000
+	 * To download rsc.jar: https://github.com/making/rsc/releases
+	 * 
+     * @param request
+     * @return Message
+     */
+    @MessageMapping("channel")
+    Flux<Message> channel(final Flux<Integer> settings) {
+        return settings
+                    .doOnNext(setting -> log.info("\nFrequency setting is {} second(s).\n", setting))
+                    .doOnCancel(() -> log.warn("client canceled the chanel"))
+                    .switchMap(setting -> Flux.interval(Duration.ofSeconds(setting))
+                                                   .map(index -> new Message(index.toString())))
+                                                   .log();
+    }
 }
