@@ -1,7 +1,7 @@
 # RSocket101
 We will walk through all types of communication between agents that is provided by RSocket. There is a presentation about RSocket, feel free to download and examine it.
 
-##How To Test "rsocket-server"
+### How To Test "rsocket-server"
 You should use "rsocket-cli". You can find the commands in this document to test your server. To see more details about RSocket CLI visit it's [GitHub page.](https://github.com/making/rsc)
 
 Test endpoint of your "request response" model.
